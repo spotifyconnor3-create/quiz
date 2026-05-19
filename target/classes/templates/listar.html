@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<title>Lista Clubes</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#f4f6f9;
+    padding:40px;
+}
+
+h1{
+    text-align:center;
+    margin-bottom:40px;
+    color:#333;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+}
+
+.btn{
+    background:#2563eb;
+    color:white;
+    padding:10px 18px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    text-decoration:none;
+    font-size:14px;
+}
+
+.btn:hover{
+    background:#1d4ed8;
+}
+
+.delete-btn{
+    background:#dc2626;
+}
+
+.delete-btn:hover{
+    background:#b91c1c;
+}
+
+.club-card{
+    background:white;
+    border-radius:16px;
+    padding:25px;
+    margin-bottom:30px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.08);
+}
+
+.club-title{
+    color:#1e293b;
+    margin-bottom:20px;
+    font-size:28px;
+}
+
+.section-title{
+    margin-top:20px;
+    margin-bottom:10px;
+    color:#334155;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:12px;
+    margin-bottom:15px;
+}
+
+input{
+    padding:12px;
+    border:1px solid #d1d5db;
+    border-radius:8px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:15px;
+}
+
+table thead{
+    background:#2563eb;
+    color:white;
+}
+
+table th,
+table td{
+    padding:12px;
+    text-align:center;
+}
+
+table tbody tr:nth-child(even){
+    background:#f8fafc;
+}
+
+.entrenador-box{
+    background:#eff6ff;
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:15px;
+}
+
+.top-bar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.empty{
+    color:#64748b;
+    margin-top:10px;
+}
+
+.actions{
+    margin-top:20px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="top-bar">
+
+<h1>⚽ Gestión de Clubes</h1>
+
+<a th:href="@{/}" class="btn">
+Crear Nuevo Club
+</a>
+
+</div>
+
+<div th:each="club : ${listaClubes}" class="club-card">
+
+<h2 class="club-title" th:text="${club.nombre}"></h2>
+
+<!-- ENTRENADOR -->
+
+<h3 class="section-title">Entrenador</h3>
+
+<div th:if="${club.entrenador != null}" class="entrenador-box">
+
+<strong>Nombre:</strong>
+<span th:text="${club.entrenador.nombre}"></span>
+<span th:text="${club.entrenador.apellido}"></span>
+
+<br><br>
+
+<strong>Edad:</strong>
+<span th:text="${club.entrenador.edad}"></span>
+
+<br><br>
+
+<strong>Nacionalidad:</strong>
+<span th:text="${club.entrenador.nacionalidad}"></span>
+
+</div>
+
+<div th:if="${club.entrenador == null}">
+
+<form th:action="@{/agregarEntrenador}" method="post">
+
+<input type="hidden" name="idClub" th:value="${club.id}">
+
+<div class="form-grid">
+
+<input type="text" name="nombre" placeholder="Nombre">
+
+<input type="text" name="apellido" placeholder="Apellido">
+
+<input type="number" name="edad" placeholder="Edad">
+
+<input type="text" name="nacionalidad" placeholder="Nacionalidad">
+
+</div>
+
+<button type="submit" class="btn">
+Agregar Entrenador
+</button>
+
+</form>
+
+</div>
+
+<!-- JUGADORES -->
+
+<h3 class="section-title">Jugadores</h3>
+
+<div th:if="${club.jugadores != null and !club.jugadores.isEmpty()}">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Nombre</th>
+<th>Apellido</th>
+<th>Número</th>
+<th>Posición</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr th:each="jugador : ${club.jugadores}">
+
+<td th:text="${jugador.nombre}"></td>
+<td th:text="${jugador.apellido}"></td>
+<td th:text="${jugador.numero}"></td>
+<td th:text="${jugador.posicion}"></td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<div th:if="${club.jugadores == null or club.jugadores.isEmpty()}" class="empty">
+
+No hay jugadores registrados.
+
+</div>
+
+<br>
+
+<form th:action="@{/agregarJugador}" method="post">
+
+<input type="hidden" name="idClub" th:value="${club.id}">
+
+<div class="form-grid">
+
+<input type="text" name="nombre" placeholder="Nombre">
+
+<input type="text" name="apellido" placeholder="Apellido">
+
+<input type="number" name="numero" placeholder="Número">
+
+<input type="text" name="posicion" placeholder="Posición">
+
+</div>
+
+<button type="submit" class="btn">
+Agregar Jugador
+</button>
+
+</form>
+
+<!-- COMPETICIONES -->
+
+<h3 class="section-title">Competiciones</h3>
+
+<div th:if="${club.competiciones != null and !club.competiciones.isEmpty()}">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Nombre</th>
+<th>Premio</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr th:each="comp : ${club.competiciones}">
+
+<td th:text="${comp.nombre}"></td>
+<td th:text="${comp.montoPremio}"></td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<div th:if="${club.competiciones == null or club.competiciones.isEmpty()}" class="empty">
+
+No hay competiciones registradas.
+
+</div>
+
+<br>
+
+<form th:action="@{/agregarCompeticion}" method="post">
+
+<input type="hidden"
+       name="idClub"
+       th:value="${club.id}">
+
+<div class="form-grid">
+
+<input type="text"
+       name="nombre"
+       placeholder="Nombre Competición">
+
+<input type="number"
+       name="premio"
+       placeholder="Monto Premio">
+
+</div>
+
+<button type="submit" class="btn">
+Agregar Competición
+</button>
+
+</form>
+
+<div class="actions">
+
+<a th:href="@{'/eliminarClub/' + ${club.id}}"
+   class="btn delete-btn">
+
+Eliminar Club
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>

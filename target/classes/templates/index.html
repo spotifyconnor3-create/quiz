@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<title>Gestión Fútbol</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
+
+body{
+background:#f1f5f9;
+padding:40px;
+}
+
+.container{
+max-width:1200px;
+margin:auto;
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:25px;
+}
+
+.card{
+background:white;
+padding:25px;
+border-radius:16px;
+box-shadow:0 4px 10px rgba(0,0,0,0.08);
+}
+
+h1{
+text-align:center;
+margin-bottom:35px;
+color:#1e293b;
+}
+
+h2{
+margin-bottom:20px;
+color:#2563eb;
+}
+
+input,
+select{
+width:100%;
+padding:12px;
+margin-bottom:15px;
+border:1px solid #cbd5e1;
+border-radius:8px;
+}
+
+button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:8px;
+background:#2563eb;
+color:white;
+font-size:15px;
+cursor:pointer;
+}
+
+button:hover{
+background:#1d4ed8;
+}
+
+.link{
+display:block;
+margin-top:30px;
+text-align:center;
+text-decoration:none;
+font-weight:bold;
+color:#2563eb;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>⚽ Sistema Gestión Fútbol</h1>
+
+<div class="grid">
+
+<!-- CLUB -->
+
+<div class="card">
+
+<h2>Crear Club</h2>
+
+<form th:action="@{/guardarClub}" method="post">
+
+<input type="text"
+       name="nombre"
+       placeholder="Nombre Club"
+       required>
+
+<select name="entrenadorId">
+
+<option value="">
+Seleccione Entrenador
+</option>
+
+<option th:each="e : ${entrenadores}"
+        th:value="${e.id}"
+        th:text="${e.nombre + ' ' + e.apellido}">
+</option>
+
+</select>
+
+<select name="competicionId">
+
+<option value="">
+Seleccione Competición
+</option>
+
+<option th:each="c : ${competiciones}"
+        th:value="${c.id}"
+        th:text="${c.nombre}">
+</option>
+
+</select>
+
+<button type="submit">
+Guardar Club
+</button>
+
+</form>
+
+</div>
+
+<!-- ENTRENADOR -->
+
+<div class="card">
+
+<h2>Crear Entrenador</h2>
+
+<form th:action="@{/guardarEntrenador}" method="post">
+
+<input type="text" name="nombre" placeholder="Nombre">
+
+<input type="text" name="apellido" placeholder="Apellido">
+
+<input type="number" name="edad" placeholder="Edad">
+
+<input type="text" name="nacionalidad" placeholder="Nacionalidad">
+
+<button type="submit">
+Guardar Entrenador
+</button>
+
+</form>
+
+</div>
+
+<!-- COMPETICION -->
+
+<div class="card">
+
+<h2>Crear Competición</h2>
+
+<form th:action="@{/guardarCompeticion}" method="post">
+
+<input type="text"
+       name="nombre"
+       placeholder="Nombre Competición">
+
+<input type="number"
+       name="premio"
+       placeholder="Monto Premio">
+
+<button type="submit">
+Guardar Competición
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+<a th:href="@{/listar}" class="link">
+Ver Clubes Registrados
+</a>
+
+</div>
+
+</body>
+</html>
